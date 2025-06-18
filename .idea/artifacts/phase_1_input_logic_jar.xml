@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="phase 1 input logic:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/phase_1_input_logic_jar</output-path>
+    <root id="archive" name="phase 1 input logic.jar">
+      <element id="module-output" name="phase 1 input logic" />
+    </root>
+  </artifact>
+</component>

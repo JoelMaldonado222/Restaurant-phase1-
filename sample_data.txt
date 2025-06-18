@@ -1,0 +1,434 @@
+/Users/maldo/Library/Java/JavaVirtualMachines/openjdk-23.0.2/Contents/Home/bin/java -javaagent:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar=55141 -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /Users/maldo/IdeaProjects/phase 1 input logic/out/production/phase 1 input logic RestaurantApp
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: Joel
+Hourly rate: 15
+Hours worked: 40
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: Kylie 
+Hourly rate: 20
+Hours worked: 20
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: Emy
+Hourly rate: 25
+Hours worked: 30
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: Bob
+Hourly rate: 5
+Hours worked: 45
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: James 
+Hourly rate: 8
+Hours worked: 18
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: Chris 
+Hourly rate: 50
+Hours worked: 100
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+4
+Remove (1) Employee or (2) Dish?
+1
+Employee name to remove: Chris
+Employee removed successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+2
+Dish name: Salmon
+Price: 30
+Dish added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+2
+Dish name: Rice and Beans
+Price: 25
+Dish added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+2
+Dish name: Chicken 
+Price: 50
+Dish added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+4
+Remove (1) Employee or (2) Dish?
+2
+Dish name to remove: Chicken 
+Dish removed successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+5
+Update (1) Employee or (2) Dish?
+1
+Enter employee name to update: Emy
+New hourly rate: 37
+New hours worked: 40
+Employee updated successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+2
+Dish name: Steak 
+Price: 75
+Dish added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+2
+Dish name: Burger 
+Price: 15
+Dish added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: Juan
+Hourly rate: 19
+Hours worked: 50
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+5
+Update (1) Employee or (2) Dish?
+Juan
+Invalid selection.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+5
+Update (1) Employee or (2) Dish?
+1
+Enter employee name to update: Juan
+New hourly rate: 22
+New hours worked: 45
+Employee updated successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+2
+Restaurant: Emery's
+Status: Closes Early ❌
+------------------------------------
+
+Employees:
+Name            | Rate     | Hours | Weekly Pay
+----------------|----------|-------|------------
+Joel            | $15.00    | 40.0 hrs | Weekly Pay: $600.00
+Kylie           | $20.00    | 20.0 hrs | Weekly Pay: $400.00
+Emy             | $37.00    | 40.0 hrs | Weekly Pay: $1480.00
+Bob             | $5.00     | 45.0 hrs | Weekly Pay: $225.00
+James           | $8.00     | 18.0 hrs | Weekly Pay: $144.00
+Juan            | $22.00    | 45.0 hrs | Weekly Pay: $990.00
+
+Menu:
+Dish Name           | Price
+--------------------|--------
+Salmon               | $30.00 
+Rice and Beans       | $25.00 
+Steak                | $75.00 
+Burger               | $15.00 
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+6
+Total weekly payroll: $3839.00
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+3
+Add (1) Employee or (2) Dish?
+1
+Employee name: Luca
+Hourly rate: 2
+Hours worked: 70
+Employee added successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+5
+Update (1) Employee or (2) Dish?
+2
+Enter dish name to update: salmon
+New price: 45
+Dish updated successfully.
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+6
+Total weekly payroll: $3979.00
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
+2
+Restaurant: Emery's
+Status: Closes Early ❌
+------------------------------------
+
+Employees:
+Name            | Rate     | Hours | Weekly Pay
+----------------|----------|-------|------------
+Joel            | $15.00    | 40.0 hrs | Weekly Pay: $600.00
+Kylie           | $20.00    | 20.0 hrs | Weekly Pay: $400.00
+Emy             | $37.00    | 40.0 hrs | Weekly Pay: $1480.00
+Bob             | $5.00     | 45.0 hrs | Weekly Pay: $225.00
+James           | $8.00     | 18.0 hrs | Weekly Pay: $144.00
+Juan            | $22.00    | 45.0 hrs | Weekly Pay: $990.00
+Luca            | $2.00     | 70.0 hrs | Weekly Pay: $140.00
+
+Menu:
+Dish Name           | Price
+--------------------|--------
+Salmon               | $45.00 
+Rice and Beans       | $25.00 
+Steak                | $75.00 
+Burger               | $15.00 
+
+--- Restaurant Manager ---
+1. Load data from file
+2. Display all data
+3. Add new record
+4. Remove record
+5. Update record
+6. Calculate total payroll
+7. Exit
+8. Toggle Open Late Status
+Enter your choice: 
