@@ -505,4 +505,9 @@ public class RestaurantApp {
         // Format the total as currency with 2 decimal places and return with descriptive text
         return String.format("Total weekly payroll: $%.2f", total);
     }
+    public RestaurantApp(Restaurant sharedRestaurant) {
+        this.restaurant = sharedRestaurant;
+        this.scanner = new Scanner(System.in); // still used for logic reuse
+    }
+
 }

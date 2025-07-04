@@ -87,6 +87,7 @@ public class Restaurant {
         this.isOpenLate = false; // Set default operating hours
     }
 
+
     // ========================================
     // GETTER METHODS
     // ========================================
