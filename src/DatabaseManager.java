@@ -1,10 +1,16 @@
+// Core JDBC classes for managing database connectivity and statements
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+// Used for user input in command-line based apps
 import java.util.Scanner;
+
+// Collections framework for managing and returning dynamic lists of records
 import java.util.List;
 import java.util.ArrayList;
+
 
 /**
  * Manages all SQLite database interactions for the Restaurant DMS project.
@@ -99,35 +105,50 @@ public class DatabaseManager {
     ////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Creates the employees and dishes tables if they do not already exist.
-     * Executed automatically on every connect(String).
+     * Creates the necessary database tables for employees and dishes
+     * if they do not already exist in the connected SQLite database.
+     *
+     * <p>This method is executed automatically when {@code connect(String)} is called
+     * to ensure the schema is initialized properly before any data operations occur.</p>
+     *
+     * <p>Tables Created:
+     * <ul>
+     *   <li><b>employees</b>: Includes id, name, hoursWorked, hourlyRate</li>
+     *   <li><b>dishes</b>: Includes id, name, price</li>
+     * </ul>
+     * </p>
      */
     private static void initializeTables() {
+        // SQL statement to create the employees table with auto-increment ID
         String createEmployeesTable = """
-            CREATE TABLE IF NOT EXISTS employees (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                hoursWorked DOUBLE NOT NULL,
-                hourlyRate DOUBLE NOT NULL
-            );
-        """;
+        CREATE TABLE IF NOT EXISTS employees (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            hoursWorked DOUBLE NOT NULL,
+            hourlyRate DOUBLE NOT NULL
+        );
+    """;
 
+        // SQL statement to create the dishes table with auto-increment ID
         String createDishesTable = """
-            CREATE TABLE IF NOT EXISTS dishes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                price DOUBLE NOT NULL
-            );
-        """;
+        CREATE TABLE IF NOT EXISTS dishes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            price DOUBLE NOT NULL
+        );
+    """;
 
         try (Statement stmt = connection.createStatement()) {
+            // Execute both table creation statements
             stmt.execute(createEmployeesTable);
             stmt.execute(createDishesTable);
             System.out.println("✅ Tables created or already exist.");
         } catch (SQLException e) {
+            // Log error if table creation fails
             System.out.println("❌ Error creating tables: " + e.getMessage());
         }
     }
+
 
     ////////////////////////////////////////////////////////////////////////////////
     // PHASE 4: DATA FETCHING (for GUI wiring)
@@ -294,63 +315,89 @@ public class DatabaseManager {
     }
 
     /**
-     * Updates a single column of an existing dish.
+     * Updates a single column of a dish in the SQLite database.
      *
-     * @param id       the dish ID
-     * @param field    the column name ("name" or "price")
-     * @param newValue the new value (parsed as DOUBLE if numeric)
+     * <p>This method dynamically builds and executes an SQL update statement
+     * to modify either the {@code name} or {@code price} field of a dish,
+     * using the provided dish ID and new value.</p>
+     *
+     * @param id       the unique ID of the dish to update
+     * @param field    the column name to update ("name" or "price")
+     * @param newValue the new value to apply; parsed as {@code double} if updating price
      */
     public static void updateDishInDB(int id, String field, String newValue) {
+        // Build SQL query using placeholder for value and ID
         String sql = "UPDATE dishes SET " + field + " = ? WHERE id = ?";
+
         try (var pstmt = connection.prepareStatement(sql)) {
+
+            // Handle field-specific value parsing
             if ("name".equals(field)) {
-                pstmt.setString(1, newValue);
+                pstmt.setString(1, newValue); // Set name directly
             } else if ("price".equals(field)) {
-                pstmt.setDouble(1, Double.parseDouble(newValue));
+                pstmt.setDouble(1, Double.parseDouble(newValue)); // Parse and set price
             } else {
+                // Exit early if an invalid column is specified
                 System.out.println("❌ Invalid field: " + field);
                 return;
             }
+
+            // Set the ID parameter
             pstmt.setInt(2, id);
+
+            // Execute the update and check rows affected
             int rows = pstmt.executeUpdate();
             System.out.println(rows > 0
                     ? "✅ Dish updated."
                     : "⚠️ No dish found with that ID.");
+
         } catch (SQLException | NumberFormatException e) {
+            // Handle SQL or parsing errors
             System.out.println("❌ Failed to update dish: " + e.getMessage());
         }
     }
 
     /**
-     * Generates and prints a payroll report by querying all employees.
-     * Calculates weekly pay as hoursWorked * hourlyRate for each.
+     * Generates and prints a payroll report using employee data from the database.
+     *
+     * <p>For each employee, this method retrieves their name, hours worked, and
+     * hourly rate, calculates their weekly pay, and prints the results to the console.
+     * At the end, it prints the total payroll for all employees.</p>
      */
     public static void calculateTotalPayrollFromDB() {
+        // SQL query to retrieve payroll-related fields
         String sql = "SELECT name, hoursWorked, hourlyRate FROM employees";
-        double totalPayroll = 0.0;
 
-        try (var stmt = connection.createStatement();
-             var rs   = stmt.executeQuery(sql)) {
+        double totalPayroll = 0.0; // Accumulator for total payroll
 
+        try (
+                var stmt = connection.createStatement();
+                var rs = stmt.executeQuery(sql)
+        ) {
+            // Print report header
             System.out.println("📋 Payroll Report:");
             System.out.println("----------------------------");
 
+            // Process each employee's data
             while (rs.next()) {
                 String name = rs.getString("name");
-                double hrs  = rs.getDouble("hoursWorked");
+                double hrs = rs.getDouble("hoursWorked");
                 double rate = rs.getDouble("hourlyRate");
-                double pay  = hrs * rate;
+                double pay = hrs * rate; // Calculate weekly pay
+
                 totalPayroll += pay;
 
+                // Output formatted employee payroll info
                 System.out.printf("👤 %s | Hours: %.2f | Rate: $%.2f | Pay: $%.2f%n",
                         name, hrs, rate, pay);
             }
 
+            // Print report footer with total payroll
             System.out.println("----------------------------");
             System.out.printf("🧾 Total Payroll: $%.2f%n", totalPayroll);
 
         } catch (SQLException e) {
+            // Handle query execution errors
             System.out.println("❌ Failed to calculate payroll: " + e.getMessage());
         }
-    }
-}
+    }}

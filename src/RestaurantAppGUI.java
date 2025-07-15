@@ -22,7 +22,7 @@ import java.util.List;
  * This application provides a comprehensive interface for managing employees,
  * menu items, payroll calculations, and restaurant hours.
  *
- * Features:
+ * <p>Features include:
  * - Modern dark theme with gradient backgrounds
  * - Animated UI components with hover effects
  * - Employee management (add, remove, update, display)
@@ -32,64 +32,93 @@ import java.util.List;
  * - File loading capabilities for data import
  * - Custom styled components with rounded corners
  * - Smooth animations and transitions
+ * </p>
  *
  * @author Joel Maldonado
- *
  */
-// Main class extends JFrame to create the main window application
 public class RestaurantAppGUI extends JFrame {
 
-    // Core business logic components
-    // Restaurant object to hold all restaurant data and operations
+    /** The main Restaurant model containing employee, dish, and status data */
     private Restaurant restaurant;
-    // Text area for displaying output messages and information to user
+
+    /** Area to display feedback and output messages to the user */
     private JTextArea outputArea;
-    // Application logic handler for restaurant operations
+
+    /** Controller class that handles all logical operations for the restaurant */
     private RestaurantApp restaurantApp;
-    // Main content panel to hold the primary display area
+
+    /** The central panel container for displaying all dynamic content views */
     private JPanel mainContent;
-    // Timer for handling smooth UI animations and transitions
+
+    /** Animation handler for smooth GUI transitions */
     private Timer animationTimer;
 
-    // Color scheme constants for consistent theming throughout the application
-    // Primary dark color for main background elements
+    // ------------------- Color Palette for Theming -------------------
+
+    /** Dark primary background color for the entire frame */
     private static final Color PRIMARY_DARK   = new Color(26, 32, 46);
-    // Secondary dark color for panel backgrounds and containers
+
+    /** Secondary background color for inner components and content panels */
     private static final Color SECONDARY_DARK = new Color(45, 55, 72);
-    // Blue accent color for primary action buttons and highlights
+
+    /** Bright blue accent for primary interactive elements like buttons */
     private static final Color ACCENT_BLUE    = new Color(66, 153, 225);
-    // Green accent color for success indicators and positive actions
+
+    /** Green color used to indicate successful operations or states */
     private static final Color ACCENT_GREEN   = new Color(72, 187, 120);
-    // Orange accent color for warning indicators and secondary actions
+
+    /** Orange accent for caution, warning, or secondary attention items */
     private static final Color ACCENT_ORANGE  = new Color(237, 137, 54);
-    // Red accent color for error indicators and destructive actions
+
+    /** Red accent for critical errors, deletion, or alert buttons */
     private static final Color ACCENT_RED     = new Color(245, 101, 101);
-    // Primary text color for main content and headings
+
+    /** Main readable text color for headers and general content */
     private static final Color TEXT_PRIMARY   = new Color(237, 242, 247);
-    // Secondary text color for less important information
+
+    /** Lighter text used for subtitles or supporting information */
     private static final Color TEXT_SECONDARY = new Color(160, 174, 192);
-    // Background color for card-like components and buttons
+
+    /** Background color used for card-like UI elements and button bases */
     private static final Color CARD_BG        = new Color(74, 85, 104);
 
     /**
-     * Constructor: initializes model, UI, and shows window
+     * Constructs the RestaurantAppGUI.
+     * <p>
+     * Initializes the Restaurant data model, attaches it to the controller logic,
+     * configures the custom GUI, and displays the window.
+     * </p>
      */
-    // Constructor method to initialize the entire application
     public RestaurantAppGUI() {
         // Create a new Restaurant instance with the name "Emery's"
-        restaurant    = new Restaurant("Emery's");
-        // Initialize the restaurant application logic with the restaurant object
+        restaurant = new Restaurant("Emery's");
+
+        // Initialize the business logic layer with the restaurant data
         restaurantApp = new RestaurantApp(restaurant);
-        // Set up all UI components and styling
+
+        // Build and configure all GUI components
         setupModernUI();
-        // Make the main window visible to the user
+
+        // Make the GUI visible
         setVisible(true);
     }
 
+
     /**
-     * Loads data from SQLite DB into memory
+     * Loads employee and dish data from an SQLite database file
+     * into the in-memory restaurant model.
+     * <p>
+     * Prompts the user for a file path, validates the file,
+     * connects to the database using {@link DatabaseManager},
+     * retrieves all employee and dish records, and populates
+     * the restaurant object with this data.
+     * </p>
+     *
+     * <p>
+     * Provides user feedback through the GUI's output area, including
+     * warnings for invalid paths, missing files, or non-.db extensions.
+     * </p>
      */
-    // Method to load restaurant data from an SQLite database file
     private void loadDataFromDatabase() {
         // Prompt for the .db file
         // Show input dialog to get database file path from user
@@ -99,60 +128,52 @@ public class RestaurantAppGUI extends JFrame {
                 "Load Data", // Dialog title
                 JOptionPane.QUESTION_MESSAGE // Dialog type with question icon
         );
+
         // Check if user canceled the dialog or entered empty string
         if (dbPath == null || dbPath.trim().isEmpty()) {
             // Display cancellation message to user
             outputArea.append("❌ Load canceled.\n");
-            // Exit method early if no valid input
             return;
         }
+
         // Remove leading/trailing whitespace from file path
         dbPath = dbPath.trim();
 
         // Validate that the file actually exists
-        // Create File object to check file existence and properties
         File dbFile = new File(dbPath);
+
         // Verify file exists and is actually a file (not directory)
         if (!dbFile.exists() || !dbFile.isFile()) {
-            // Display error message if file not found
             outputArea.append("❌ File not found: " + dbPath + "\n");
-            // Exit method if file validation fails
             return;
         }
 
         // Warn if it doesn't use the .db extension
-        // Check if file has proper database extension (case-insensitive)
         if (!dbPath.toLowerCase().endsWith(".db")) {
-            // Display warning but continue processing
             outputArea.append("⚠️ Warning: \"" + dbPath + "\" does not end with \".db\". Proceeding anyway…\n");
         }
 
         // Try-catch block for database operations that might fail
         try {
-            // Connect and fetch
-            // Establish connection to the SQLite database
+            // Connect to the database and fetch records
             DatabaseManager.connect(dbPath);
-            // Retrieve all employee records from database
-            var employees = DatabaseManager.getAllEmployees();
-            // Retrieve all dish records from database
-            var dishes    = DatabaseManager.getAllDishes();
+            var employees = DatabaseManager.getAllEmployees(); // Fetch employee list
+            var dishes    = DatabaseManager.getAllDishes();    // Fetch dish list
 
-            // Re-sync in‑memory model
-            // Clear existing data from restaurant object
+            // Re-sync in‑memory model by clearing current data
             restaurant.clearAll();
-            // Add each employee from database to restaurant object
-            employees.forEach(restaurant::addEmployee);
-            // Add each dish from database to restaurant object
-            dishes   .forEach(restaurant::addDish);
 
-            // Display success message with count of loaded records
+            // Add all employees and dishes from the database to the restaurant
+            employees.forEach(restaurant::addEmployee);
+            dishes.forEach(restaurant::addDish);
+
+            // Display success message with number of records loaded
             outputArea.append(String.format(
                     "📁 ✅ Load complete: %d employees, %d dishes.%n",
                     employees.size(), dishes.size()
             ));
-            // Catch any exceptions during database operations
         } catch (Exception ex) {
-            // Display error message with exception details
+            // Display error message in case of exception
             outputArea.append("❌ Load failed: " + ex.getMessage() + "\n");
         }
     }
