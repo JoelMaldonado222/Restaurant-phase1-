@@ -8,12 +8,12 @@ import java.util.List;
  *
  * This class provides functionality to:
  * - Manage restaurant employees (add, remove, update)
- * - Manage menu items (add, remove, update)
+ * - Manage dishes (add, remove, update)
  * - Calculate payroll information
  * - Track restaurant operational status (open late hours)
  *
- * The class uses ArrayList collections to store employees and menu items,
- * providing dynamic sizing and efficient access to restaurant data.
+ * Uses ArrayList collections to store employees and dishes,
+ * providing dynamic sizing and efficient access to data.
  *
  * @author [Your Name]
  * @version 1.0
@@ -25,35 +25,17 @@ public class Restaurant {
     // INSTANCE VARIABLES
     // ========================================
 
-    /**
-     * The name of the restaurant.
-     * This field stores the restaurant's display name and cannot be null or empty.
-     * The name is trimmed of leading/trailing whitespace during initialization.
-     */
+    /** The name of the restaurant. Cannot be null or empty. */
     private String name;
 
-    /**
-     * Flag indicating whether the restaurant operates late hours.
-     * Default value is false (restaurant does not stay open late).
-     * This can be used to track special operating hours or late-night service availability.
-     */
+    /** Flag indicating whether the restaurant operates late hours. */
     private boolean isOpenLate;
 
-    /**
-     * Dynamic list of all employees working at the restaurant.
-     * Uses ArrayList for efficient random access and dynamic resizing.
-     * Each employee is represented by an Employee object containing
-     * name, hourly rate, and hours worked information.
-     */
-    private ArrayList<Employee> employees;
+    /** List of Employee objects representing staff. */
+    private List<Employee> employees;
 
-    /**
-     * Dynamic list of all dishes available on the restaurant's menu.
-     * Uses ArrayList for efficient random access and dynamic resizing.
-     * Each dish is represented by a Dish object containing
-     * name and price information.
-     */
-    private ArrayList<Dish> menu;
+    /** List of Dish objects representing menu items. */
+    private List<Dish> dishes;
 
     // ========================================
     // CONSTRUCTORS
@@ -61,164 +43,78 @@ public class Restaurant {
 
     /**
      * Constructs a new Restaurant with the specified name.
+     * Initializes empty lists for employees and dishes, and sets default hours.
      *
-     * Initializes the restaurant with:
-     * - The provided name (after validation and trimming)
-     * - Empty employee list
-     * - Empty menu list
-     * - Default late hours setting (false)
-     *
-     * @param name The name of the restaurant (cannot be null or empty)
-     * @throws IllegalArgumentException if name is null, empty, or contains only whitespace
-     *
-     * @example
-     * Restaurant myRestaurant = new Restaurant("Joe's Diner");
+     * @param name the restaurant name (non-null, non-empty)
+     * @throws IllegalArgumentException if name is invalid
      */
     public Restaurant(String name) {
-        // Validate that the restaurant name is not null or empty
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Restaurant name cannot be null or empty");
         }
-
-        // Initialize restaurant properties
-        this.name = name.trim(); // Remove leading/trailing whitespace
-        this.employees = new ArrayList<>(); // Create empty employee list
-        this.menu = new ArrayList<>(); // Create empty menu list
-        this.isOpenLate = false; // Set default operating hours
+        this.name = name.trim();
+        this.employees = new ArrayList<>();
+        this.dishes = new ArrayList<>();
+        this.isOpenLate = false;
     }
 
-
     // ========================================
-    // GETTER METHODS
+    // GETTERS & SETTERS
     // ========================================
 
-    /**
-     * Retrieves the name of the restaurant.
-     *
-     * @return The restaurant's name as a String (never null or empty)
-     *
-     * @example
-     * String restaurantName = myRestaurant.getName();
-     * System.out.println("Restaurant: " + restaurantName);
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Checks if the restaurant operates late hours.
-     *
-     * @return true if the restaurant is open late, false otherwise
-     *
-     * @example
-     * if (myRestaurant.isOpenLate()) {
-     *     System.out.println("This restaurant serves late night customers!");
-     * }
-     */
     public boolean isOpenLate() {
         return isOpenLate;
     }
 
-    // ========================================
-    // SETTER METHODS
-    // ========================================
-
-    /**
-     * Sets the late hours operational status of the restaurant.
-     *
-     * This method allows updating whether the restaurant provides
-     * late-night service or extended operating hours.
-     *
-     * @param openLate true to indicate late hours operation, false for regular hours
-     *
-     * @example
-     * myRestaurant.setOpenLate(true); // Restaurant now serves late customers
-     */
     public void setOpenLate(boolean openLate) {
         this.isOpenLate = openLate;
     }
 
     // ========================================
-    // EMPLOYEE MANAGEMENT METHODS
+    // EMPLOYEE MANAGEMENT
     // ========================================
 
     /**
-     * Adds a new employee to the restaurant's staff.
+     * Adds a new employee after validating inputs and duplicates.
      *
-     * This method creates a new Employee object with the provided parameters
-     * and adds it to the restaurant's employee list. It performs validation
-     * to ensure no duplicate employee names exist (case-insensitive comparison).
-     *
-     * Validation includes:
-     * - Employee name cannot be null or empty
-     * - Hourly rate must be positive
-     * - Hours worked must be non-negative
-     * - Employee name must be unique within the restaurant
-     *
-     * @param name The employee's full name (cannot be null or empty)
-     * @param hourlyRate The employee's hourly wage rate (must be positive)
-     * @param hoursWorked The number of hours the employee has worked (must be non-negative)
-     * @return null if the employee was successfully added, or an error message string if validation failed
-     *
-     * @example
-     * String result = myRestaurant.addEmployee("John Smith", 15.50, 40.0);
-     * if (result == null) {
-     *     System.out.println("Employee added successfully!");
-     * } else {
-     *     System.out.println("Error: " + result);
-     * }
+     * @param name        employee name (non-null, non-empty)
+     * @param hourlyRate  positive hourly rate
+     * @param hoursWorked non-negative hours worked
+     * @return null if successful, or error message
      */
     public String addEmployee(String name, double hourlyRate, double hoursWorked) {
         try {
-            // Create new employee object (this will validate the parameters)
             Employee e = new Employee(name, hourlyRate, hoursWorked);
-
-            // Check for duplicate employee names (case-insensitive)
             for (Employee existing : employees) {
                 if (existing.getName().equalsIgnoreCase(e.getName())) {
                     return "Employee with name '" + e.getName() + "' already exists.";
                 }
             }
-
-            // Add the new employee to the list
             employees.add(e);
-            return null; // Success - no error message
+            return null;
         } catch (IllegalArgumentException ex) {
-            // Return the validation error message from Employee constructor
             return ex.getMessage();
         }
     }
 
     /**
-     * Removes an employee from the restaurant's staff by name.
+     * Removes an employee by name (case-insensitive).
      *
-     * This method searches for an employee with the specified name
-     * (case-insensitive search) and removes them from the employee list.
-     * Uses Iterator to safely remove items during iteration.
-     *
-     * @param name The name of the employee to remove (cannot be null or empty)
-     * @return A status message indicating the result of the operation:
-     *         - "Employee removed successfully." if employee was found and removed
-     *         - "Employee not found." if no matching employee exists
-     *         - "Name cannot be null or empty." if invalid name provided
-     *
-     * @example
-     * String result = myRestaurant.removeEmployee("John Smith");
-     * System.out.println(result); // "Employee removed successfully." or error message
+     * @param name employee name to remove
+     * @return status message
      */
     public String removeEmployee(String name) {
-        // Validate input parameter
         if (name == null || name.trim().isEmpty()) {
             return "Name cannot be null or empty.";
         }
-
-        // Use iterator for safe removal during iteration
-        Iterator<Employee> iterator = employees.iterator();
-        while (iterator.hasNext()) {
-            Employee e = iterator.next();
-            // Case-insensitive name comparison
-            if (e.getName().equalsIgnoreCase(name.trim())) {
-                iterator.remove();
+        Iterator<Employee> it = employees.iterator();
+        while (it.hasNext()) {
+            if (it.next().getName().equalsIgnoreCase(name.trim())) {
+                it.remove();
                 return "Employee removed successfully.";
             }
         }
@@ -226,43 +122,25 @@ public class Restaurant {
     }
 
     /**
-     * Updates an existing employee's hourly rate and hours worked.
+     * Updates an employee's rate and hours.
      *
-     * This method searches for an employee by name and updates their
-     * employment information with new values. Both hourly rate and
-     * hours worked are updated in a single operation.
-     *
-     * @param name The name of the employee to update (cannot be null or empty)
-     * @param newRate The new hourly rate for the employee (must be positive)
-     * @param newHours The new hours worked for the employee (must be non-negative)
-     * @return A status message indicating the result:
-     *         - "Employee updated successfully." if both updates succeeded
-     *         - "Employee update completed with some validation errors." if updates had validation issues
-     *         - "Employee not found." if no matching employee exists
-     *         - "Name cannot be null or empty." if invalid name provided
-     *
-     * @example
-     * String result = myRestaurant.updateEmployee("John Smith", 16.00, 45.0);
-     * System.out.println(result); // Status of the update operation
+     * @param name     employee name to update
+     * @param newRate  new hourly rate
+     * @param newHours new hours worked
+     * @return status message
      */
     public String updateEmployee(String name, double newRate, double newHours) {
-        // Validate input parameter
         if (name == null || name.trim().isEmpty()) {
             return "Name cannot be null or empty.";
         }
-
-        // Search for the employee and update their information
         for (Employee e : employees) {
             if (e.getName().equalsIgnoreCase(name.trim())) {
-                // Attempt to update both hourly rate and hours worked
-                boolean rateUpdated = e.setHourlyRate(newRate);
-                boolean hoursUpdated = e.setHoursWorked(newHours);
-
-                // Return appropriate status based on update results
-                if (rateUpdated && hoursUpdated) {
+                boolean rateOk = e.setHourlyRate(newRate);
+                boolean hoursOk = e.setHoursWorked(newHours);
+                if (rateOk && hoursOk) {
                     return "Employee updated successfully.";
                 } else {
-                    return "Employee update completed with some validation errors.";
+                    return "Employee update completed with validation errors.";
                 }
             }
         }
@@ -270,111 +148,58 @@ public class Restaurant {
     }
 
     /**
-     * Retrieves display strings for all employees in the restaurant.
+     * Returns formatted strings for all employees.
      *
-     * This method generates a list of formatted strings representing
-     * each employee's information. The format is determined by the
-     * Employee class's getDisplayString() method.
-     *
-     * @return A List of String objects, each containing formatted employee information.
-     *         Returns an empty list if no employees exist.
-     *
-     * @example
-     * List<String> employeeList = myRestaurant.getEmployeeDisplayStrings();
-     * for (String employee : employeeList) {
-     *     System.out.println(employee);
-     * }
+     * @return list of employee display strings
      */
     public List<String> getEmployeeDisplayStrings() {
-        List<String> employeeStrings = new ArrayList<>();
-
-        // Generate display string for each employee
+        List<String> out = new ArrayList<>();
         for (Employee e : employees) {
-            employeeStrings.add(e.getDisplayString());
+            out.add(e.getDisplayString());
         }
-
-        return employeeStrings;
+        return out;
     }
 
     // ========================================
-    // MENU MANAGEMENT METHODS
+    // DISH MANAGEMENT
     // ========================================
 
     /**
-     * Adds a new dish to the restaurant's menu.
+     * Adds a new dish after validation and duplicate check.
      *
-     * This method creates a new Dish object with the provided parameters
-     * and adds it to the restaurant's menu list. It performs validation
-     * to ensure no duplicate dish names exist (case-insensitive comparison).
-     *
-     * Validation includes:
-     * - Dish name cannot be null or empty
-     * - Price must be non-negative
-     * - Dish name must be unique within the menu
-     *
-     * @param name The name of the dish (cannot be null or empty)
-     * @param price The price of the dish (must be non-negative)
-     * @return null if the dish was successfully added, or an error message string if validation failed
-     *
-     * @example
-     * String result = myRestaurant.addDish("Grilled Salmon", 18.99);
-     * if (result == null) {
-     *     System.out.println("Dish added to menu successfully!");
-     * } else {
-     *     System.out.println("Error: " + result);
-     * }
+     * @param name  dish name (non-null, non-empty)
+     * @param price non-negative price
+     * @return null if successful, or error message
      */
     public String addDish(String name, double price) {
         try {
-            // Create new dish object (this will validate the parameters)
             Dish d = new Dish(name, price);
-
-            // Check for duplicate dish names (case-insensitive)
-            for (Dish existing : menu) {
+            for (Dish existing : dishes) {
                 if (existing.getName().equalsIgnoreCase(d.getName())) {
                     return "Dish with name '" + d.getName() + "' already exists.";
                 }
             }
-
-            // Add the new dish to the menu
-            menu.add(d);
-            return null; // Success - no error message
+            dishes.add(d);
+            return null;
         } catch (IllegalArgumentException ex) {
-            // Return the validation error message from Dish constructor
             return ex.getMessage();
         }
     }
 
     /**
-     * Removes a dish from the restaurant's menu by name.
+     * Removes a dish by name (case-insensitive).
      *
-     * This method searches for a dish with the specified name
-     * (case-insensitive search) and removes it from the menu list.
-     * Uses Iterator to safely remove items during iteration.
-     *
-     * @param name The name of the dish to remove (cannot be null or empty)
-     * @return A status message indicating the result of the operation:
-     *         - "Dish removed successfully." if dish was found and removed
-     *         - "Dish not found." if no matching dish exists
-     *         - "Name cannot be null or empty." if invalid name provided
-     *
-     * @example
-     * String result = myRestaurant.removeDish("Grilled Salmon");
-     * System.out.println(result); // "Dish removed successfully." or error message
+     * @param name dish name to remove
+     * @return status message
      */
     public String removeDish(String name) {
-        // Validate input parameter
         if (name == null || name.trim().isEmpty()) {
             return "Name cannot be null or empty.";
         }
-
-        // Use iterator for safe removal during iteration
-        Iterator<Dish> iterator = menu.iterator();
-        while (iterator.hasNext()) {
-            Dish d = iterator.next();
-            // Case-insensitive name comparison
-            if (d.getName().equalsIgnoreCase(name.trim())) {
-                iterator.remove();
+        Iterator<Dish> it = dishes.iterator();
+        while (it.hasNext()) {
+            if (it.next().getName().equalsIgnoreCase(name.trim())) {
+                it.remove();
                 return "Dish removed successfully.";
             }
         }
@@ -382,37 +207,22 @@ public class Restaurant {
     }
 
     /**
-     * Updates the price of an existing dish on the menu.
+     * Updates a dish's price.
      *
-     * This method searches for a dish by name and updates its price
-     * with the new value provided. The dish name remains unchanged.
-     *
-     * @param name The name of the dish to update (cannot be null or empty)
-     * @param newPrice The new price for the dish (must be non-negative)
-     * @return A status message indicating the result:
-     *         - "Dish updated successfully." if price was updated successfully
-     *         - "Dish update failed due to validation error." if new price is invalid
-     *         - "Dish not found." if no matching dish exists
-     *         - "Name cannot be null or empty." if invalid name provided
-     *
-     * @example
-     * String result = myRestaurant.updateDish("Grilled Salmon", 19.99);
-     * System.out.println(result); // Status of the update operation
+     * @param name     dish name to update
+     * @param newPrice new price
+     * @return status message
      */
     public String updateDish(String name, double newPrice) {
-        // Validate input parameter
         if (name == null || name.trim().isEmpty()) {
             return "Name cannot be null or empty.";
         }
-
-        // Search for the dish and update its price
-        for (Dish d : menu) {
+        for (Dish d : dishes) {
             if (d.getName().equalsIgnoreCase(name.trim())) {
-                // Attempt to update the dish price
                 if (d.setPrice(newPrice)) {
                     return "Dish updated successfully.";
                 } else {
-                    return "Dish update failed due to validation error.";
+                    return "Dish update failed due to validation.";
                 }
             }
         }
@@ -420,59 +230,95 @@ public class Restaurant {
     }
 
     /**
-     * Retrieves display strings for all dishes on the restaurant's menu.
+     * Returns formatted strings for all dishes.
      *
-     * This method generates a list of formatted strings representing
-     * each dish's information. The format is determined by the
-     * Dish class's getDisplayString() method.
-     *
-     * @return A List of String objects, each containing formatted dish information.
-     *         Returns an empty list if no dishes exist on the menu.
-     *
-     * @example
-     * List<String> menuList = myRestaurant.getMenuDisplayStrings();
-     * System.out.println("Menu:");
-     * for (String dish : menuList) {
-     *     System.out.println("- " + dish);
-     * }
+     * @return list of dish display strings
      */
     public List<String> getMenuDisplayStrings() {
-        List<String> menuStrings = new ArrayList<>();
-
-        // Generate display string for each dish
-        for (Dish d : menu) {
-            menuStrings.add(d.getDisplayString());
+        List<String> out = new ArrayList<>();
+        for (Dish d : dishes) {
+            out.add(d.getDisplayString());
         }
-
-        return menuStrings;
+        return out;
     }
 
     // ========================================
-    // FINANCIAL CALCULATION METHODS
+    // FINANCIAL METHODS
     // ========================================
 
     /**
-     * Calculates and returns the total weekly payroll for all employees.
+     * Calculates total weekly payroll for all employees.
      *
-     * This method iterates through all employees and sums up their
-     * individual weekly pay amounts. The weekly pay for each employee
-     * is calculated as (hourly rate × hours worked).
-     *
-     * @return The total weekly payroll amount as a double.
-     *         Returns 0.0 if no employees exist or if all employees have zero pay.
-     *
-     * @example
-     * double totalPayroll = myRestaurant.getTotalPayroll();
-     * System.out.printf("Total weekly payroll: $%.2f%n", totalPayroll);
+     * @return total payroll amount
      */
     public double getTotalPayroll() {
         double total = 0;
-
-        // Sum up weekly pay for all employees
         for (Employee e : employees) {
             total += e.getWeeklyPay();
         }
-
         return total;
     }
+
+    // ========================================
+    // GUI RELOAD HELPERS
+    // ========================================
+
+    /**
+     * Clears in-memory lists of employees and dishes.
+     */
+    public void clearAll() {
+        employees.clear();
+        dishes.clear();
+    }
+
+    /**
+     * Adds an Employee object into memory (used after DB load).
+     *
+     * @param e Employee to add
+     */
+    public void addEmployee(Employee e) {
+        employees.add(e);
+    }
+
+    /**
+     * Adds a Dish object into memory (used after DB load).
+     *
+     * @param d Dish to add
+     */
+    public void addDish(Dish d) {
+        dishes.add(d);
+    }
+    /**
+     * Returns a **copy** of the current in-memory employee list
+     * so callers can iterate without mutating our internal list.
+     */
+    public List<Employee> getEmployees() {
+        return new ArrayList<>(employees);
+    }
+
+    /**
+     * Returns a **copy** of the current in-memory dishes list
+     * so callers can iterate without mutating our internal list.
+     */
+    public List<Dish> getDishes() {
+        return new ArrayList<>(dishes);
+    }
+    /**
+     * Removes the first employee whose database‐ID matches the given id.
+     * @param id the database ID to remove
+     * @return true if an employee was found & removed, false otherwise
+     */
+    public boolean removeEmployeeById(int id) {
+        return employees.removeIf(e -> e.getId() == id);
+    }
+
+    /**
+     * Removes the first dish whose database‐ID matches the given id.
+     * @param id the database ID to remove
+     * @return true if a dish was found & removed, false otherwise
+     */
+    public boolean removeDishById(int id) {
+        return dishes.removeIf(d -> d.getId() == id);
+    }
+
 }

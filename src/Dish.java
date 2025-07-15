@@ -1,118 +1,153 @@
-// Represents a single menu item (dish) in the restaurant management system.
-// This class encapsulates all dish-related data and business logic including
-// the dish name, pricing information, and display formatting.
-//
-// The Dish class enforces business rules such as:
-// - Dish names cannot be null, empty, or contain only whitespace
-// - Prices must be non-negative (free items are allowed with $0.00 price)
-// - Consistent formatting for menu display purposes
-//
-// This class follows encapsulation principles by keeping all fields private
-// and providing controlled access through getter and setter methods with
-// appropriate validation to maintain data integrity.
+/**
+ * Represents a single menu item (dish) in the restaurant management system.
+ * This class encapsulates all dish-related data and business logic including
+ * the dish name, pricing information, display formatting, and database ID.
+ *
+ * The Dish class enforces business rules such as:
+ * - Dish IDs are assigned by the database (AUTOINCREMENT).
+ * - Dish names cannot be null, empty, or contain only whitespace.
+ * - Prices must be non-negative (free items are allowed with $0.00 price).
+ *
+ * This class follows encapsulation principles by keeping all fields private
+ * and providing controlled access through getter and setter methods with
+ * appropriate validation to maintain data integrity.
+ *
+ * @author Your Name
+ * @since 2024
+ */
 public class Dish {
-    // The name of the dish as it appears on the menu - stored as trimmed string to ensure consistency
-    private String name;
+    // ========================================
+    // INSTANCE VARIABLES
+    // ========================================
 
-    // The price of the dish in dollars - must be non-negative to prevent pricing errors
-    private double price;
+    /**
+     * The unique database ID for this dish.
+     * Assigned by the SQLite AUTOINCREMENT mechanism.
+     * A value of 0 indicates "not yet persisted" (in-memory only).
+     */
+    private final int id;                  // holds the database primary key for this dish
 
-    // Constructor that creates a new Dish instance with comprehensive input validation.
-    // This constructor enforces all business rules to ensure data integrity and
-    // prevents the creation of Dish objects with invalid data that could cause
-    // problems in menu displays or pricing calculations.
-    //
-    // Validation rules enforced:
-    // - Name cannot be null, empty, or contain only whitespace (ensures menu readability)
-    // - Price must be non-negative (prevents pricing errors, allows free items at $0.00)
-    //
-    // Parameters:
-    // - name: The dish name as it should appear on the menu (will be trimmed of whitespace)
-    // - price: The price in dollars (must be >= 0, zero allowed for promotional items)
-    //
-    // Throws IllegalArgumentException if any parameter fails validation rules
+    /**
+     * The name of the dish as it appears on the menu.
+     * Stored as a trimmed string to ensure consistency.
+     */
+    private String name;                   // user-facing dish name
+
+    /**
+     * The price of the dish in dollars.
+     * Must be non-negative to prevent pricing errors.
+     */
+    private double price;                  // pricing information
+
+    // ========================================
+    // CONSTRUCTORS
+    // ========================================
+
+    /**
+     * Constructs a new Dish instance for in-memory use only.
+     * Assigns a default ID of 0 (not yet persisted).
+     *
+     * @param name  The dish name (will be trimmed; cannot be null or empty)
+     * @param price The price in dollars (must be >= 0; zero allowed)
+     * @throws IllegalArgumentException if name is invalid or price is negative
+     */
     public Dish(String name, double price) {
-        // Validate name is not null or empty to prevent menu items without proper identification
-        // This ensures every dish has a displayable name for customer-facing menus
-        if (name == null || name.trim().isEmpty()) {
+        this(0, name, price);             // delegate to main constructor with id=0
+    }
+
+    /**
+     * Constructs a new Dish instance with a specific database ID.
+     * Use this when loading from or syncing with the database.
+     *
+     * @param id    The database ID (AUTOINCREMENT value; must be >= 0)
+     * @param name  The dish name (will be trimmed; cannot be null or empty)
+     * @param price The price in dollars (must be >= 0; zero allowed)
+     * @throws IllegalArgumentException if id < 0, name is invalid, or price is negative
+     */
+    public Dish(int id, String name, double price) {
+        if (id < 0) {                      // validate that ID is non-negative
+            throw new IllegalArgumentException("Dish ID cannot be negative");
+        }
+        if (name == null || name.trim().isEmpty()) {  // validate name
             throw new IllegalArgumentException("Dish name cannot be null or empty");
         }
-
-        // Validate price is non-negative to prevent pricing errors and maintain business logic
-        // Zero is explicitly allowed to support promotional items, free samples, or complimentary dishes
-        if (price < 0) {
+        if (price < 0) {                   // validate price
             throw new IllegalArgumentException("Price cannot be negative");
         }
 
-        // Assign validated values to instance variables after all validation passes
-        // Trim the name to remove leading/trailing whitespace for consistent menu formatting
-        this.name = name.trim();
-        this.price = price;
+        this.id = id;                      // assign validated ID
+        this.name = name.trim();          // assign trimmed name
+        this.price = price;               // assign validated price
     }
 
-    // Retrieves the dish's name.
-    // This getter method provides read-only access to the dish's name which was
-    // validated and trimmed during construction to ensure it's never null or empty.
-    //
-    // Returns: String containing the dish name (trimmed, never null or empty)
+    // ========================================
+    // GETTERS
+    // ========================================
+
+    /**
+     * Retrieves the database‑assigned ID for this dish.
+     *
+     * @return the dish’s ID (0 if not yet persisted)
+     */
+    public int getId() {
+        return id;                        // return primary key
+    }
+
+    /**
+     * Retrieves the dish’s name.
+     *
+     * @return the trimmed, non-null name of the dish
+     */
     public String getName() {
-        return name;
+        return name;                      // return current name
     }
 
-    // Retrieves the dish's price.
-    // This getter method provides read-only access to the dish's price which is
-    // guaranteed to be non-negative due to constructor and setter validation.
-    //
-    // Returns: double representing the price in dollars (>= 0)
+    /**
+     * Retrieves the dish’s price.
+     *
+     * @return the non-negative price in dollars
+     */
     public double getPrice() {
-        return price;
+        return price;                     // return current price
     }
 
-    // Updates the dish's price with validation to maintain data integrity.
-    // This setter method allows modification of the price while enforcing the
-    // non-negative price business rule to prevent pricing errors.
-    //
-    // Unlike the constructor, this method uses return values instead of exceptions
-    // to indicate success/failure, making it more suitable for user input scenarios
-    // where graceful error handling is preferred over program termination.
-    //
-    // Parameters:
-    // - price: The new price in dollars (must be >= 0)
-    //
-    // Returns: boolean true if the price was successfully updated, false if validation failed
+    // ========================================
+    // SETTERS
+    // ========================================
+
+    /**
+     * Updates the dish’s price with validation.
+     * Enforces the non-negative business rule.
+     *
+     * @param price the new price in dollars (must be >= 0)
+     * @return true if update succeeded; false if validation failed
+     */
     public boolean setPrice(double price) {
-        // Validate the new price meets business rules (non-negative)
-        // This prevents accidental negative pricing that could cause financial losses
-        if (price < 0) {
-            // Return false to indicate validation failure without throwing exception
-            // This allows calling code to handle the error gracefully
-            return false;
+        if (price < 0) {                  // reject negative prices
+            return false;                 // indicate failure
         }
-
-        // Update the price since validation passed
-        this.price = price;
-
-        // Return true to indicate successful update
-        return true;
+        this.price = price;               // assign new price
+        return true;                      // indicate success
     }
 
-    // Generates a formatted string representation of the dish for display purposes.
-    // This method creates a consistently formatted table row that aligns with the
-    // table headers used in the RestaurantApp menu display methods.
-    //
-    // The format includes:
-    // - Dish name (left-aligned, 20 characters wide to accommodate longer dish names)
-    // - Price (currency format with $ symbol, left-aligned, 6 characters wide with 2 decimal places)
-    //
-    // Example output: "Grilled Salmon      | $18.95"
-    // Example output: "Coffee              | $2.50 "
-    //
-    // Returns: String containing formatted dish information suitable for console menu display
+    // ========================================
+    // DISPLAY/FORMAT
+    // ========================================
+
+    /**
+     * Generates a formatted string representation of the dish for display.
+     * Format: [ID] Name (20-char left-align) | $Price (6-char left-align, 2 decimals)
+     *
+     * Example: "[12] Grilled Salmon      | $18.99"
+     *
+     * @return a string suitable for menu listings or console output
+     */
     public String getDisplayString() {
-        // Use String.format for precise formatting control to ensure consistent table alignment
-        // %-20s: left-align dish name in 20-character field (handles long dish names)
-        // $%-6.2f: left-align currency with $ symbol and 2 decimal places in 6-character field
-        // The 2 decimal places ensure proper currency formatting (e.g., $5.00 not $5)
-        return String.format("%-20s | $%-6.2f", name, price);
+        return String.format(
+                "[%d] %-20s | $%-6.2f",
+                id,                             // include ID in brackets
+                name,                           // left-align name in 20-char field
+                price                           // left-align price with 2 decimal places
+        );
     }
 }

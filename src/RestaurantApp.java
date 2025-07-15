@@ -510,4 +510,24 @@ public class RestaurantApp {
         this.scanner = new Scanner(System.in); // still used for logic reuse
     }
 
+    /**
+     * Remove an employee from the in‐memory model by its database ID.
+     * @param id the database ID of the employee to remove
+     * @return true if removed, false if not found
+     */
+    public boolean removeEmployeeById(int id) {
+        return restaurant.removeEmployeeById(id);
+    }
+
+    /**
+     * Remove a dish from the in‐memory model by its database ID.
+     * @param id the database ID of the dish to remove
+     * @return true if removed, false if not found
+     */
+    public boolean removeDishById(int id) {
+        return restaurant.removeDishById(id);
+    }
+
+
+
 }
