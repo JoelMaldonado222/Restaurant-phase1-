@@ -119,44 +119,47 @@ public class RestaurantAppGUI extends JFrame {
      * warnings for invalid paths, missing files, or non-.db extensions.
      * </p>
      */
+    /**
+     * Prompts the user to select an SQLite database file using a visual file picker,
+     * then loads employee and dish records from the selected database into the restaurant system.
+     * Displays detailed feedback in the output area regarding load success or failure.
+     */
     private void loadDataFromDatabase() {
-        // Prompt for the .db file
-        // Show input dialog to get database file path from user
-        String dbPath = JOptionPane.showInputDialog(
-                this, // Parent component for dialog positioning
-                "Enter SQLite database file name (e.g., sample_restaurant.db):", // Prompt message
-                "Load Data", // Dialog title
-                JOptionPane.QUESTION_MESSAGE // Dialog type with question icon
-        );
+        // Create a file chooser dialog for selecting the .db file
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select SQLite .db File");
 
-        // Check if user canceled the dialog or entered empty string
-        if (dbPath == null || dbPath.trim().isEmpty()) {
+        // Show the file chooser dialog and store user result
+        int result = fileChooser.showOpenDialog(this); // 'this' = main GUI window
+
+        // Check if user clicked cancel or closed the dialog
+        if (result != JFileChooser.APPROVE_OPTION) {
             // Display cancellation message to user
             outputArea.append("❌ Load canceled.\n");
             return;
         }
 
-        // Remove leading/trailing whitespace from file path
-        dbPath = dbPath.trim();
+        // Get the file the user selected
+        File dbFile = fileChooser.getSelectedFile();
+        String dbPath = dbFile.getAbsolutePath();
 
-        // Validate that the file actually exists
-        File dbFile = new File(dbPath);
+        // Validate file extension and warn if needed
+        if (!dbPath.toLowerCase().endsWith(".db")) {
+            outputArea.append("⚠️ Warning: \"" + dbPath + "\" does not end with \".db\". Proceeding anyway…\n");
+        }
 
-        // Verify file exists and is actually a file (not directory)
+        // Verify that the selected file actually exists
         if (!dbFile.exists() || !dbFile.isFile()) {
             outputArea.append("❌ File not found: " + dbPath + "\n");
             return;
         }
 
-        // Warn if it doesn't use the .db extension
-        if (!dbPath.toLowerCase().endsWith(".db")) {
-            outputArea.append("⚠️ Warning: \"" + dbPath + "\" does not end with \".db\". Proceeding anyway…\n");
-        }
-
         // Try-catch block for database operations that might fail
         try {
-            // Connect to the database and fetch records
+            // Connect to the database using the selected file path
             DatabaseManager.connect(dbPath);
+
+            // Fetch records from the database
             var employees = DatabaseManager.getAllEmployees(); // Fetch employee list
             var dishes    = DatabaseManager.getAllDishes();    // Fetch dish list
 
@@ -175,6 +178,7 @@ public class RestaurantAppGUI extends JFrame {
         } catch (Exception ex) {
             // Display error message in case of exception
             outputArea.append("❌ Load failed: " + ex.getMessage() + "\n");
+            ex.printStackTrace();
         }
     }
 
